@@ -303,13 +303,13 @@ array 配列の持つ
 ブロックの形を定義したコードの下に書く。
 
 # ここから
-# ブロック出現時初期位置の指定
-BLOCK_INIT_POINT_X = 5
-BLOCK_INIT_POINT_Y = 0
+    # ブロック出現時初期位置の指定
+    BLOCK_INIT_POINT_X = 5
+    BLOCK_INIT_POINT_Y = 0
 
-# マップ上のブロック表示基点座標
-x = BLOCK_INIT_POINT_X
-y = BLOCK_INIT_POINT_Y
+    # マップ上のブロック表示基点座標
+    x = BLOCK_INIT_POINT_X
+    y = BLOCK_INIT_POINT_Y
 # ここまで
 
 この指定ではブロックの作成される座標を決める。
@@ -320,35 +320,35 @@ y 座標が[0] x 座標が[5]を指す。
 値は頻繁に変更される変数郡。ブロックの初期位置を決めるコードの下に追記。
 
 # ここから
-# 各種変数定義
-# ブロックスコープの問題でループの外に出しておく必要あり。
-# phase はテトリスのゲームを行う上でどの動作を行うかを決める変数。
-# ブロックを配置するフェーズ、ブロックが一列並んでいるかを確認するフェーズ
-# ブロックを生成するフェーズなど。
-phase = nil
+    # 各種変数定義
+    # ブロックスコープの問題でループの外に出しておく必要あり。
+    # phase はテトリスのゲームを行う上でどの動作を行うかを決める変数。
+    # ブロックを配置するフェーズ、ブロックが一列並んでいるかを確認するフェーズ
+    # ブロックを生成するフェーズなど。
+    phase = nil
 
-# map を表示するための変数。但し、表示する為の変数で、実際の map は tetris_map で運用。
-map = nil
+    # map を表示するための変数。但し、表示する為の変数で、実際の map は tetris_map で運用。
+    map = nil
 
-# 配置操作を行なっているブロックの形を保持する変数。
-current_block = nil
-# ブロックの形のタイプを保持する配列。
-# ブロックを回転した時のデータを持っている。
-# current_block_type[i]という使い方をすることで、
-# 現在扱っているブロックの向きを決定する。
-# i はブロックの向きを指定する為の変数。0~3 の値まで有効
-current_block_type = []
-i = 0
-
-# 経過時間を測るための変数。
-# Time.now で現在の時間が取得できる。
-at_time = Time.now
-
-# テトリスの行数をカウントするための変数。
-# ブロックを配置し終わると、
-# マップの一番下から上に向かってブロックが一行揃っているかを調べ、
-# ブロックを消す作業に入るために使用。
-line_count = 20
+    # 配置操作を行なっているブロックの形を保持する変数。
+    current_block = nil
+    # ブロックの形のタイプを保持する配列。
+    # ブロックを回転した時のデータを持っている。
+    # current_block_type[i]という使い方をすることで、
+    # 現在扱っているブロックの向きを決定する。
+    # i はブロックの向きを指定する為の変数。0~3 の値まで有効
+    current_block_type = []
+    i = 0
+    
+    # 経過時間を測るための変数。
+    # Time.now で現在の時間が取得できる。
+    at_time = Time.now
+    
+    # テトリスの行数をカウントするための変数。
+    # ブロックを配置し終わると、
+    # マップの一番下から上に向かってブロックが一行揃っているかを調べ、
+    # ブロックを消す作業に入るために使用。
+    line_count = 20
 # ここまで
 
 
@@ -370,38 +370,38 @@ end
 ****************
 
 # ここから
-# START を選択するとゲーム開始
-  if arrow["y"] == START_POSITION["y"]
-    # シーン切り替えの為、ボタン入力後の待ち時間
-    sleep 1
-    scene = "TETRIS"
-    phase = "CREATE"
-  end
+    # START を選択するとゲーム開始
+      if arrow["y"] == START_POSITION["y"]
+        # シーン切り替えの為、ボタン入力後の待ち時間
+        sleep 1
+        scene = "TETRIS"
+        phase = "CREATE"
+      end
 #　ここまで
 
 
 さらに、下記のコードを
- if scene == "TETRIS"
-   map = Marshal.load(Marshal.dump(tetris_map))
+     if scene == "TETRIS"
+       map = Marshal.load(Marshal.dump(tetris_map))
 の下に書き込む。
 
 # ここから
-    if phase == "CREATE"
-      # ブロック生成時には回転していない状態にする
-      i = 0
-
-      # ブロックの定義ハッシュ(辞書みたいなもの)を
-      # ランダムに並べ替え(ソート)して、ハッシュの最初のブロックを選ぶ。
-      # ハッシュをソートすると、二次配列目が KEY(キー) と VALUE(バリュー) のセット、
-      # 一次配列目が KEY を 0 に、 VALUE を 1 に設定した配列になる。
-      current_block_type = BLOCK_TYPE.sort_by{rand}[0][1]
-
-      # ブロックが回転していない状態を設定するためにブロックの回転状況の配列の頭から取得。
-      current_block = current_block_type[i]
-
-      # ゲーム内のフェーズをブロックの生成からブロックの配置に変更する。
-      phase = "PLACEMENT"
-    end
+        if phase == "CREATE"
+          # ブロック生成時には回転していない状態にする
+          i = 0
+    
+          # ブロックの定義ハッシュ(辞書みたいなもの)を
+          # ランダムに並べ替え(ソート)して、ハッシュの最初のブロックを選ぶ。
+          # ハッシュをソートすると、二次配列目が KEY(キー) と VALUE(バリュー) のセット、
+          # 一次配列目が KEY を 0 に、 VALUE を 1 に設定した配列になる。
+          current_block_type = BLOCK_TYPE.sort_by{rand}[0][1]
+    
+          # ブロックが回転していない状態を設定するためにブロックの回転状況の配列の頭から取得。
+          current_block = current_block_type[i]
+    
+          # ゲーム内のフェーズをブロックの生成からブロックの配置に変更する。
+          phase = "PLACEMENT"
+        end
 # ここまで
 
 
@@ -413,29 +413,29 @@ end
 下記のコードを Window.loop do 行の上に書く。
 
 # ここから
-def merge_map(map, block, x, y)
-  map[y][x] *= block[0][0]
-  map[y][x + 1] *= block[0][1]
-  map[y][x + 2] *= block[0][2]
-  map[y][x + 3] *= block[0][3]
-
-  map[y + 1][x] *= block[1][0]
-  map[y + 1][x + 1] *= block[1][1]
-  map[y + 1][x + 2] *= block[1][2]
-  map[y + 1][x + 3] *= block[1][3]
-
-  map[y + 2][x] *= block[2][0]
-  map[y + 2][x + 1] *= block[2][1]
-  map[y + 2][x + 2] *= block[2][2]
-  map[y + 2][x + 3] *= block[2][3]
-
-  map[y + 3][x] *= block[3][0]
-  map[y + 3][x + 1] *= block[3][1]
-  map[y + 3][x + 2] *= block[3][2]
-  map[y + 3][x + 3] *= block[3][3]
-
-  return map
-end
+    def merge_map(map, block, x, y)
+      map[y][x] *= block[0][0]
+      map[y][x + 1] *= block[0][1]
+      map[y][x + 2] *= block[0][2]
+      map[y][x + 3] *= block[0][3]
+    
+      map[y + 1][x] *= block[1][0]
+      map[y + 1][x + 1] *= block[1][1]
+      map[y + 1][x + 2] *= block[1][2]
+      map[y + 1][x + 3] *= block[1][3]
+    
+      map[y + 2][x] *= block[2][0]
+      map[y + 2][x + 1] *= block[2][1]
+      map[y + 2][x + 2] *= block[2][2]
+      map[y + 2][x + 3] *= block[2][3]
+    
+      map[y + 3][x] *= block[3][0]
+      map[y + 3][x + 1] *= block[3][1]
+      map[y + 3][x + 2] *= block[3][2]
+      map[y + 3][x + 3] *= block[3][3]
+    
+      return map
+    end
 # ここまで
 
 マップと、ブロックデータの重ねあわせ方法には
@@ -451,9 +451,9 @@ end
 本当は繰り返しという方法を用いると簡単に短く書けるが、今回は使っていない。
 
 
-def merge_map(~)
-
-end
+    def merge_map(~)
+    
+    end
 
 def から始まり end で括られている塊のことをメソッドと呼び、
 ある一定の処理の塊を再利用することを目的にされている。
@@ -470,20 +470,20 @@ return はメソッドの外部にデータを持ち出すための手段で、
 
 上記のコードが書けたら、さらに
 
-if phase == "CREATE"
-  i = 0
-  current_block_type = BLOCK_TYPE.sort_by{rand}[0][1]
-  current_block = current_block_type[i]
-  phase = "PLACEMENT"
-end
+    if phase == "CREATE"
+      i = 0
+      current_block_type = BLOCK_TYPE.sort_by{rand}[0][1]
+      current_block = current_block_type[i]
+      phase = "PLACEMENT"
+    end
 
 の if 文の塊の下に下記のコードを書く。
 
 # ここから
-    if phase != "CHECK"
-      # ブロックの座標をマップに反映させる
-      map = merge_map(map, current_block, x, y)
-    end
+        if phase != "CHECK"
+          # ブロックの座標をマップに反映させる
+          map = merge_map(map, current_block, x, y)
+        end
 # ここまで
 
 ここまでで、ブロックが表示されるようになるはずである。
@@ -497,34 +497,34 @@ end
 以下のコードを if phase == "CREATE" 文の塊の下に書く。
 
 # ここから
-    if phase == "PLACEMENT"
-
-      if Input.keyPush? K_A
-        # ブロックの回転を制御する為には i の値が配列を一周回れるようにする。
-        # K_A では値は 1 つずつ減るため i == 0 の場合は i の数値を 4 に変更。
-        if i == 0
-          i = 4
+        if phase == "PLACEMENT"
+    
+          if Input.keyPush? K_A
+            # ブロックの回転を制御する為には i の値が配列を一周回れるようにする。
+            # K_A では値は 1 つずつ減るため i == 0 の場合は i の数値を 4 に変更。
+            if i == 0
+              i = 4
+            end
+    
+            # i の値を減らすことでブロックを回転させる。
+            i = i - 1
+    
+            # current_block_type はブロックの回転情報を持っている配列なので、
+            # i の値が変わり、current_block に i を対応させた結果を代入するとブロックが回転する。
+            current_block = current_block_type[i]
+          end
+    
+          # K_S も基本的に一緒。
+          # 但し、キーボードの S を押した時に動作することと、
+          # i が +1 される所、i が 3 を指した時には i の値を -1 に変更する。
+          if Input.keyPush? K_S
+            if i == 3
+              i = -1
+            end
+            i = i + 1
+            current_block = current_block_type[i]
+          end
         end
-
-        # i の値を減らすことでブロックを回転させる。
-        i = i - 1
-
-        # current_block_type はブロックの回転情報を持っている配列なので、
-        # i の値が変わり、current_block に i を対応させた結果を代入するとブロックが回転する。
-        current_block = current_block_type[i]
-      end
-
-      # K_S も基本的に一緒。
-      # 但し、キーボードの S を押した時に動作することと、
-      # i が +1 される所、i が 3 を指した時には i の値を -1 に変更する。
-      if Input.keyPush? K_S
-        if i == 3
-          i = -1
-        end
-        i = i + 1
-        current_block = current_block_type[i]
-      end
-    end
 # ここまで
 
 この塊は、ゲームシーンの中でもブロックを配置する為に使うフェーズである。
@@ -533,9 +533,9 @@ K_A と K_S はそれぞれキーボードの A と S を指しているので�
 因みに、K_ とアルファベットの大文字をつなぎ合わせることで他のキーを割り当てることも出来る。
 
 例えば、
-if Input.keyPush? K_E
-
-end
+    if Input.keyPush? K_E
+    
+    end
 とすると、E のキーが押された時に if ~ end までに書かれたコードが実行される。
 
 == という書き方が if 文の条件に使われているが、
@@ -551,8 +551,8 @@ i に数値 (文字としての 0 は不可) の 0 以外の値が代入され�
 
 if 文は真を示した場合に中の処理を行うので、
 
-if i == 0
-end
+    if i == 0
+    end
 
 とすると、i が 0 だった場合に中の処理を行う。
 
@@ -569,13 +569,13 @@ if phase == "PLACEMENT"
 上記記述行の下に下記のコードを書く。
 
 # ここから
-      move = nil
-      # 1 秒ごとに一段下に移動する
-      if (Time.now - at_time).to_i % 2 == 1
-        at_time = Time.now
-        y = y + 1
-        move = true
-      end
+          move = nil
+          # 1 秒ごとに一段下に移動する
+          if (Time.now - at_time).to_i % 2 == 1
+            at_time = Time.now
+            y = y + 1
+            move = true
+          end
 # ここまで
 
 コードの実行がうまくいくか確認する。
@@ -590,115 +590,115 @@ if phase == "PLACEMENT"
 
 衝突判定を行うメソッドは下記のコードなので、これらを
 
-def merge_map(map, block, line, x, y)
-.
-.
-  return map
-end
+    def merge_map(map, block, line, x, y)
+    .
+    .
+      return map
+    end
 
 の塊の上に書く。
 
 # ここから
-def column_background?(block, column)
-  if block[0][column] == 1 &&
-      block[1][column] == 1 &&
-      block[2][column] == 1 &&
-      block[3][column] == 1
-
-    return true
-  end
-
-  return false
-end
-
-def line_background?(block, line)
-  if block[line][0] == 1 &&
-      block[line][1] == 1 &&
-      block[line][2] == 1 &&
-      block[line][3] == 1
-
-    return true
-  end
-
-  return false
-end
-
-def line_background?(block, line)
-  if block[line][0] == 1 &&
-      block[line][1] == 1 &&
-      block[line][2] == 1 &&
-      block[line][3] == 1
-
-    return true
-  end
-
-  return false
-end
-
-def column_collision_safe?(map, block, column, x, y, stat)
-  if stat == "left"
-    if  (map[y][x + column - 1] * block[0][column] == 1 ||
-         map[y][x + column - 1] * block[0][column] == 2) &&
-        (map[y + 1][x + column - 1] * block[1][column] == 1 ||
-         map[y + 1][x + column - 1] * block[1][column] == 2) &&
-        (map[y + 2][x + column - 1] * block[2][column] == 1 ||
-         map[y + 2][x + column - 1] * block[2][column] == 2) &&
-        (map[y + 3][x + column - 1] * block[3][column] == 1 ||
-         map[y + 3][x + column - 1] * block[3][column] == 2)
-
-      return true
+    def column_background?(block, column)
+      if block[0][column] == 1 &&
+          block[1][column] == 1 &&
+          block[2][column] == 1 &&
+          block[3][column] == 1
+    
+        return true
+      end
+    
+      return false
     end
-  end
-
-  if stat == "right"
-    if  (map[y][x + column + 1] * block[0][column] == 1 ||
-         map[y][x + column + 1] * block[0][column] == 2) &&
-        (map[y + 1][x + column + 1] * block[1][column] == 1 ||
-         map[y + 1][x + column + 1] * block[1][column] == 2) &&
-        (map[y + 2][x + column + 1] * block[2][column] == 1 ||
-         map[y + 2][x + column + 1] * block[2][column] == 2) &&
-        (map[y + 3][x + column + 1] * block[3][column] == 1 ||
-         map[y + 3][x + column + 1] * block[3][column] == 2)
-
-      return true
+    
+    def line_background?(block, line)
+      if block[line][0] == 1 &&
+          block[line][1] == 1 &&
+          block[line][2] == 1 &&
+          block[line][3] == 1
+    
+        return true
+      end
+    
+      return false
     end
-  end
-end
-
-def line_collision?(map, block, line, x, y)
-  if  ((map[y + line + 1][x] == 0 &&
-        block[line][0] == 2) ||
-       map[y + line + 1][x] + block[line][0] == 4) ||
-      ((map[y + line + 1][x + 1] == 0 &&
-        block[line][1] == 2) ||
-        map[y + line + 1][x + 1] + block[line][1] == 4) ||
-      ((map[y + line + 1][x + 2] == 0 &&
-        block[line][2] == 2) ||
-       map[y + line + 1][x + 2] + block[line][2] == 4) ||
-      ((map[y + line + 1][x + 3] == 0 &&
-        block[line][3] == 2) ||
-       map[y + line + 1][x + 3] + block[line][3] == 4)
-
-    return true
-  end
-
-  return false
-end
-
-def line_collision_safe?(map, block, line, x, y)
-  return !line_collision?(map, block, line, x, y)
-end
+    
+    def line_background?(block, line)
+      if block[line][0] == 1 &&
+          block[line][1] == 1 &&
+          block[line][2] == 1 &&
+          block[line][3] == 1
+    
+        return true
+      end
+    
+      return false
+    end
+    
+    def column_collision_safe?(map, block, column, x, y, stat)
+      if stat == "left"
+        if  (map[y][x + column - 1] * block[0][column] == 1 ||
+             map[y][x + column - 1] * block[0][column] == 2) &&
+            (map[y + 1][x + column - 1] * block[1][column] == 1 ||
+             map[y + 1][x + column - 1] * block[1][column] == 2) &&
+            (map[y + 2][x + column - 1] * block[2][column] == 1 ||
+             map[y + 2][x + column - 1] * block[2][column] == 2) &&
+            (map[y + 3][x + column - 1] * block[3][column] == 1 ||
+             map[y + 3][x + column - 1] * block[3][column] == 2)
+    
+          return true
+        end
+      end
+    
+      if stat == "right"
+        if  (map[y][x + column + 1] * block[0][column] == 1 ||
+             map[y][x + column + 1] * block[0][column] == 2) &&
+            (map[y + 1][x + column + 1] * block[1][column] == 1 ||
+             map[y + 1][x + column + 1] * block[1][column] == 2) &&
+            (map[y + 2][x + column + 1] * block[2][column] == 1 ||
+             map[y + 2][x + column + 1] * block[2][column] == 2) &&
+            (map[y + 3][x + column + 1] * block[3][column] == 1 ||
+             map[y + 3][x + column + 1] * block[3][column] == 2)
+    
+          return true
+        end
+      end
+    end
+    
+    def line_collision?(map, block, line, x, y)
+      if  ((map[y + line + 1][x] == 0 &&
+            block[line][0] == 2) ||
+           map[y + line + 1][x] + block[line][0] == 4) ||
+          ((map[y + line + 1][x + 1] == 0 &&
+            block[line][1] == 2) ||
+            map[y + line + 1][x + 1] + block[line][1] == 4) ||
+          ((map[y + line + 1][x + 2] == 0 &&
+            block[line][2] == 2) ||
+           map[y + line + 1][x + 2] + block[line][2] == 4) ||
+          ((map[y + line + 1][x + 3] == 0 &&
+            block[line][3] == 2) ||
+           map[y + line + 1][x + 3] + block[line][3] == 4)
+    
+        return true
+      end
+    
+      return false
+    end
+    
+    def line_collision_safe?(map, block, line, x, y)
+      return !line_collision?(map, block, line, x, y)
+    end
 # ここまで
 
 さらに、
 
-if Input.keyPush? K_S
-  if i == 3
-    i = -1
-  end
-  i = i + 1
-  current_block = current_block_type[i]
-end
+    if Input.keyPush? K_S
+      if i == 3
+        i = -1
+      end
+      i = i + 1
+      current_block = current_block_type[i]
+    end
 
 上記コードの塊の下に、下記コードを書く。
 
