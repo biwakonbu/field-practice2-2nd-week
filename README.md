@@ -46,7 +46,7 @@
 
 例えば、下記の配列では
 
-# ここから
+```
       二次元
       0 1 2 3
      ---------
@@ -54,7 +54,7 @@
 次 1|[2,1,1,1],
 元 2|[2,2,1,1],
    3|[1,1,1,1]
-# ここまで
+```
 
 この 配列では L 字のブロックを作成。
 点線の外枠は配列の順番、横の並びが一次元配列、縦が二次元配列になってる。
@@ -79,7 +79,7 @@ array 配列の持つ
 
 以下のコードを書く。
 
-#ここから
+```ruby
 # ブロック描画用空間のサイズ (4x4)
 BLOCK_SPACE = 4
 
@@ -294,12 +294,12 @@ BLOCK_TYPE = {
           ]
          ]
 }
-# ここまで
+```
 
 - ブロックを画面の中に作成した時の初期位置を指定する。
 ブロックの形を定義したコードの下に書く。
 
-# ここから
+```ruby
 # ブロック出現時初期位置の指定
 BLOCK_INIT_POINT_X = 5
 BLOCK_INIT_POINT_Y = 0
@@ -307,7 +307,7 @@ BLOCK_INIT_POINT_Y = 0
 # マップ上のブロック表示基点座標
 x = BLOCK_INIT_POINT_X
 y = BLOCK_INIT_POINT_Y
-# ここまで
+```
 
 この指定ではブロックの作成される座標を決める。
 y 座標が[0] x 座標が[5]を指す。
@@ -316,7 +316,7 @@ y 座標が[0] x 座標が[5]を指す。
 ゲーム内で使用する変数で、値自体はゲームループ内で決める。
 値は頻繁に変更される変数郡。ブロックの初期位置を決めるコードの下に追記。
 
-# ここから
+```ruby
 # 各種変数定義
 # ブロックスコープの問題でループの外に出しておく必要あり。
 # phase はテトリスのゲームを行う上でどの動作を行うかを決める変数。
@@ -346,7 +346,7 @@ at_time = Time.now
 # マップの一番下から上に向かってブロックが一行揃っているかを調べ、
 # ブロックを消す作業に入るために使用。
 line_count = 20
-# ここまで
+```
 
 
 - 落とす予定のブロック表示
@@ -366,7 +366,7 @@ end
 
 ****************
 
-# ここから
+```ruby
 # START を選択するとゲーム開始
   if arrow["y"] == START_POSITION["y"]
     # シーン切り替えの為、ボタン入力後の待ち時間
@@ -374,7 +374,7 @@ end
     scene = "TETRIS"
     phase = "CREATE"
   end
-#　ここまで
+```
 
 
 さらに、下記のコードを
@@ -382,7 +382,7 @@ end
    map = Marshal.load(Marshal.dump(tetris_map))
 の下に書き込む。
 
-# ここから
+```ruby
     if phase == "CREATE"
       # ブロック生成時には回転していない状態にする
       i = 0
@@ -399,7 +399,7 @@ end
       # ゲーム内のフェーズをブロックの生成からブロックの配置に変更する。
       phase = "PLACEMENT"
     end
-# ここまで
+```
 
 
 *** メソッドの作成 ***
@@ -409,7 +409,7 @@ end
 
 下記のコードを Window.loop do 行の上に書く。
 
-# ここから
+```ruby
 def merge_map(map, block, x, y)
   map[y][x] *= block[0][0]
   map[y][x + 1] *= block[0][1]
@@ -433,7 +433,7 @@ def merge_map(map, block, x, y)
 
   return map
 end
-# ここまで
+```
 
 マップと、ブロックデータの重ねあわせ方法には
 掛け算を利用した。
@@ -476,12 +476,12 @@ end
 
 の if 文の塊の下に下記のコードを書く。
 
-# ここから
+```ruby
     if phase != "CHECK"
       # ブロックの座標をマップに反映させる
       map = merge_map(map, current_block, x, y)
     end
-# ここまで
+```
 
 ここまでで、ブロックが表示されるようになるはずである。
 コードの実行を行い、ブロックが生成されることを確認する。
@@ -493,7 +493,7 @@ end
 先ずは簡単なところから作るため、ブロックを回転させる機能を実装する。
 以下のコードを if phase == "CREATE" 文の塊の下に書く。
 
-# ここから
+```ruby
     if phase == "PLACEMENT"
 
       if Input.keyPush? K_A
@@ -522,7 +522,7 @@ end
         current_block = current_block_type[i]
       end
     end
-# ここまで
+```
 
 この塊は、ゲームシーンの中でもブロックを配置する為に使うフェーズである。
 K_A と K_S はそれぞれキーボードの A と S を指しているので、
@@ -565,7 +565,7 @@ if phase == "PLACEMENT"
 
 上記記述行の下に下記のコードを書く。
 
-# ここから
+```ruby
       move = nil
       # 1 秒ごとに一段下に移動する
       if (Time.now - at_time).to_i % 2 == 1
@@ -573,7 +573,7 @@ if phase == "PLACEMENT"
         y = y + 1
         move = true
       end
-# ここまで
+```
 
 コードの実行がうまくいくか確認する。
 途中でバグが発生して、ゲームが固まることを確認。
@@ -595,7 +595,7 @@ end
 
 の塊の上に書く。
 
-# ここから
+```ruby
 def column_background?(block, column)
   if block[0][column] == 1 &&
       block[1][column] == 1 &&
@@ -685,7 +685,7 @@ end
 def line_collision_safe?(map, block, line, x, y)
   return !line_collision?(map, block, line, x, y)
 end
-# ここまで
+```
 
 さらに、
 
@@ -699,7 +699,7 @@ end
 
 上記コードの塊の下に、下記コードを書く。
 
-# ここから
+```ruby
 
       if (line_collision? map, current_block, 3, x, y) ||
           (line_collision? map, current_block, 2, x, y) ||
@@ -708,7 +708,7 @@ end
         tetris_map = merge_map(map, current_block, x, y)
         phase = "CHECK"
       end
-# ここまで
+```
 
 これで地面や積み上がったブロックとの衝突は無くなる。
 しかし、フェーズは CHECK に移行するが、まだ CHECK は作っていないので
@@ -728,7 +728,7 @@ end
 
 上記 if 文の塊の下に下記のコードを書く。
 
-# ここから
+```ruby
     if phase == "CHECK"
       if line_count == 0
         x = BLOCK_INIT_POINT_X
@@ -741,7 +741,7 @@ end
         line_count = line_count - 1
       end
     end
-# ここまで
+```
 
 
 しかし、今度は違う問題が発生し、ブロックが積み上がりすぎた為に
@@ -756,11 +756,11 @@ if phase == "CHECK"
 
 の行の直ぐ下に下記のコードを書く。
 
-# ここから
+```ruby
       if line_count == 1 && (tetris_map[line_count][2...12].include? 2)
         scene = "TITLE"
       end
-# ここまで
+```
 
 一番上から二番目の位置にブロックが侵入したらゲームは終了し、タイトルフェーズへ戻る。
 ただ、現状で待つのは面倒くさいので、確認は後回しにして、ブロックの移動機能を実装する。
@@ -779,7 +779,7 @@ end
 
 上記 if 文の塊の下に下記コードを書く。
 
-# ここから
+```ruby
       unless move
         if Input.keyPush? K_LEFTARROW
           if (column_background? current_block, 0) ||
@@ -814,7 +814,7 @@ end
           end
         end
       end
-# ここまで
+```
 
 ここまで来ると、大分ゲームらしくなってくる。
 右、左、下カーソルが反応している事を確認。
@@ -829,13 +829,13 @@ end
 
 上記 if 文の塊の下に下記コードを書く。
 
-# ここから
+```ruby
   if !(tetris_map[line_count][2...12].include? 1)
     tetris_map[line_count][2...12] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     tetris_map[1..line_count] = tetris_map[0..line_count-1]
     tetris_map[0] = [1,0,1,1,1,1,1,1,1,1,1,1,0,1,1]
     line_count = line_count + 1
   end
-# ここまで
+```
 
 これで、ゲームはひと通りの機能が実装完了。
