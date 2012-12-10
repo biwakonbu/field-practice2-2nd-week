@@ -767,6 +767,7 @@ end
 
 さらに、
 
+```ruby
     if Input.keyPush? K_S
       if i == 3
         i = -1
@@ -774,8 +775,9 @@ end
       i = i + 1
       current_block = current_block_type[i]
     end
+```
 
-上記コードの塊の下に、下記コードを書く。
+上記コードの 1 行下に、下記コードを書く。
 
 ```ruby
 
@@ -797,14 +799,16 @@ end
 既にブロックを作成するコードはあるのでブロックをチェックするフェーズを作り、
 そのフェーズからブロックを作成するフェーズに移動するようにする。
 
+```ruby
 if phase == "CREATE" 
   i = 0
   current_block_type = BLOCK_TYPE.sort_by{rand}[0][1]
   current_block = current_block_type[i]
   phase = "PLACEMENT"
 end
+```
 
-上記 if 文の塊の下に下記のコードを書く。
+上記 if 文の 1 行下に下記のコードを書く。
 
 ```ruby
     if phase == "CHECK"
@@ -825,14 +829,16 @@ end
 しかし、今度は違う問題が発生し、ブロックが積み上がりすぎた為に
 ブロックを生成する場所にブロックが侵入してゲームが止まってしまう。
 
-*** ゲームオーバー ***
+- ゲームオーバー
 テトリスのゲームルールから言っても、 縦で 20 マス目にブロックが存在すると
 ゲームを終了させるべきである。
 ついでにタイトル画面に戻せばゲームっぽくなる。
 
+```ruby
 if phase == "CHECK"
+```
 
-の行の直ぐ下に下記のコードを書く。
+上記 コード の 1 行下に下記のコードを書く。
 
 ```ruby
       if line_count == 1 && (tetris_map[line_count][2...12].include? 2)
@@ -842,11 +848,11 @@ if phase == "CHECK"
 
 一番上から二番目の位置にブロックが侵入したらゲームは終了し、タイトルフェーズへ戻る。
 ただ、現状で待つのは面倒くさいので、確認は後回しにして、ブロックの移動機能を実装する。
-**********************
 
 移動自体は簡単で、問題は衝突判定だが衝突判定に関してのメソッドは既に作ってある。
 後は、状況に合わせたメソッドの使用で対応。
 
+```ruby
 if Input.keyPush? K_S 
   if i == 3
     i = -1
@@ -854,8 +860,9 @@ if Input.keyPush? K_S
   i = i + 1
   current_block = current_block_type[i]
 end
+```
 
-上記 if 文の塊の下に下記コードを書く。
+上記 if 文の 1 行下に下記コードを書く。
 
 ```ruby
       unless move
@@ -901,11 +908,13 @@ end
 
 後は一行以上揃えたブロックの削除を作るだけである。
 
+```ruby
 if line_count == 1 && (tetris_map[line_count][2...12].include? 2)
   scene = "TITLE"
 end
+```
 
-上記 if 文の塊の下に下記コードを書く。
+上記 if 文の 1 行下に下記コードを書く。
 
 ```ruby
   if !(tetris_map[line_count][2...12].include? 1)
