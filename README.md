@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 第 2 週目の授業内容は、前回よりも内容が複雑で、
 コピー & ペーストでコードを書いていってもうまくいかないことが予想されます。
 その為、プログラムを書き換える前に、
@@ -646,6 +647,30 @@ def line_background?(block, line)
   return false
 end
 
+def line_background?(block, line)
+  if block[line][0] == 1 &&
+      block[line][1] == 1 &&
+      block[line][2] == 1 &&
+      block[line][3] == 1
+
+    return true
+  end
+
+  return false
+end
+
+def line_background?(block, line)
+  if block[line][0] == 1 &&
+      block[line][1] == 1 &&
+      block[line][2] == 1 &&
+      block[line][3] == 1
+
+    return true
+  end
+
+  return false
+end
+
 def column_collision_safe?(map, block, column, x, y, stat)
   if stat == "left"
     if  (map[y][x + column - 1] * block[0][column] == 1 ||
@@ -659,85 +684,45 @@ def column_collision_safe?(map, block, column, x, y, stat)
 
       return true
     end
-    
-    def line_background?(block, line)
-      if block[line][0] == 1 &&
-          block[line][1] == 1 &&
-          block[line][2] == 1 &&
-          block[line][3] == 1
-    
-        return true
-      end
-    
-      return false
-    end
-    
-    def line_background?(block, line)
-      if block[line][0] == 1 &&
-          block[line][1] == 1 &&
-          block[line][2] == 1 &&
-          block[line][3] == 1
-    
-        return true
-      end
-    
-      return false
-    end
-    
-    def column_collision_safe?(map, block, column, x, y, stat)
-      if stat == "left"
-        if  (map[y][x + column - 1] * block[0][column] == 1 ||
-             map[y][x + column - 1] * block[0][column] == 2) &&
-            (map[y + 1][x + column - 1] * block[1][column] == 1 ||
-             map[y + 1][x + column - 1] * block[1][column] == 2) &&
-            (map[y + 2][x + column - 1] * block[2][column] == 1 ||
-             map[y + 2][x + column - 1] * block[2][column] == 2) &&
-            (map[y + 3][x + column - 1] * block[3][column] == 1 ||
-             map[y + 3][x + column - 1] * block[3][column] == 2)
-    
-          return true
-        end
-      end
-    
-      if stat == "right"
-        if  (map[y][x + column + 1] * block[0][column] == 1 ||
-             map[y][x + column + 1] * block[0][column] == 2) &&
-            (map[y + 1][x + column + 1] * block[1][column] == 1 ||
-             map[y + 1][x + column + 1] * block[1][column] == 2) &&
-            (map[y + 2][x + column + 1] * block[2][column] == 1 ||
-             map[y + 2][x + column + 1] * block[2][column] == 2) &&
-            (map[y + 3][x + column + 1] * block[3][column] == 1 ||
-             map[y + 3][x + column + 1] * block[3][column] == 2)
-    
-          return true
-        end
-      end
-    end
-    
-    def line_collision?(map, block, line, x, y)
-      if  ((map[y + line + 1][x] == 0 &&
-            block[line][0] == 2) ||
-           map[y + line + 1][x] + block[line][0] == 4) ||
-          ((map[y + line + 1][x + 1] == 0 &&
-            block[line][1] == 2) ||
-            map[y + line + 1][x + 1] + block[line][1] == 4) ||
-          ((map[y + line + 1][x + 2] == 0 &&
-            block[line][2] == 2) ||
-           map[y + line + 1][x + 2] + block[line][2] == 4) ||
-          ((map[y + line + 1][x + 3] == 0 &&
-            block[line][3] == 2) ||
-           map[y + line + 1][x + 3] + block[line][3] == 4)
-    
-        return true
-      end
-    
-      return false
-    end
-    
-    def line_collision_safe?(map, block, line, x, y)
-      return !line_collision?(map, block, line, x, y)
+  end
+
+  if stat == "right"
+    if  (map[y][x + column + 1] * block[0][column] == 1 ||
+         map[y][x + column + 1] * block[0][column] == 2) &&
+        (map[y + 1][x + column + 1] * block[1][column] == 1 ||
+         map[y + 1][x + column + 1] * block[1][column] == 2) &&
+        (map[y + 2][x + column + 1] * block[2][column] == 1 ||
+         map[y + 2][x + column + 1] * block[2][column] == 2) &&
+        (map[y + 3][x + column + 1] * block[3][column] == 1 ||
+         map[y + 3][x + column + 1] * block[3][column] == 2)
+
+      return true
     end
   end
+end
+
+def line_collision?(map, block, line, x, y)
+  if  ((map[y + line + 1][x] == 0 &&
+        block[line][0] == 2) ||
+       map[y + line + 1][x] + block[line][0] == 4) ||
+      ((map[y + line + 1][x + 1] == 0 &&
+        block[line][1] == 2) ||
+        map[y + line + 1][x + 1] + block[line][1] == 4) ||
+      ((map[y + line + 1][x + 2] == 0 &&
+        block[line][2] == 2) ||
+       map[y + line + 1][x + 2] + block[line][2] == 4) ||
+      ((map[y + line + 1][x + 3] == 0 &&
+        block[line][3] == 2) ||
+       map[y + line + 1][x + 3] + block[line][3] == 4)
+
+    return true
+  end
+
+  return false
+end
+
+def line_collision_safe?(map, block, line, x, y)
+  return !line_collision?(map, block, line, x, y)
 end
 
 def line_collision?(map, block, line, x, y)
