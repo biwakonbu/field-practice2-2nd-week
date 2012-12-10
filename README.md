@@ -381,11 +381,14 @@ START を選択するとゲームを開始するための if 文を書き換え�
   end
 ```
 
+さらに、下記のコードの 1 行下に
 
-さらに、下記のコードを
+```ruby
      if scene == "TETRIS"
        map = Marshal.load(Marshal.dump(tetris_map))
-の下に書き込む。
+```
+
+下記のコードを追加する。
 
 ```ruby
     if phase == "CREATE"
