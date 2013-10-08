@@ -1,3 +1,5 @@
+
+
 ### Map の作り方
 
 Map の作成方法を理解する。
@@ -155,17 +157,19 @@ Ruby では警告が出るものの二度以上代入することが出来る。
 ```ruby
 require 'dxruby'
 
+# def 名前(変数, 変数, ...) 
+# ~
+# end
+# 変数の定義と同じで、メソッドにも好きな名前を指定することができる
+# また、( ) かっこ内に変数を指定でき、そこで指定した変数は
+# メソッドを呼び出す際に必ず対応した値を入れる必要がある
+# 例) 名前(変数, 変数) 
+# この処理を行った時、メソッドで最後に実行した行が返す値が
+# メソッドを実行した行に対して置き換わる
+# また、return という文を使用することで、メソッドを強制的に終了させ、
+# 指定した値を返すことも出来る
 def create(block, x=X_BUFFER+X+50, y=Y_BUFFER)
   Sprite.new(x, y, block)
-end
-
-def clean(map)
-  20.downto(0) do |height|
-    if map.count {|block| (block.x < X_BUFFER + X * 11) && (block.y == Y_BUFFER + Y * height)} == 11
-      return true
-    end
-  end
-  false
 end
 
 Window.caption = 'OneBlockTetris'
@@ -277,3 +281,165 @@ end
 ```
 
 上記プログラムでは、ブロックの作成、次に作成するブロックの作成、表示を行っている。
+そして、新しく自分自身でメソッドを定義している。
+今までは既に定義されているメソッドを使用していたが、
+ブロックを生成するメソッドは存在しないため、自分で作る必要がある。
+作らず、同様の処理を必要としている場所に書くという方法もあるが、
+それをしてしまうと、同様の処理を何度も書く必要がでて無駄が生じる。
+その為、処理に名前をつけて記録する必要がある。
+
+
+### Clear 処理
+
+ゲームを作成する上で最終目標を設定する事がよくある。
+勿論最終目標が無く、サバイバル的に続けられる分だけ続けるゲームも存在する。
+今回の 1 ブロックのテトリスでは、一行を揃えるだけでクリアとしたいので、
+クリア用のプログラムを作成する。
+
+```ruby
+require 'dxruby'
+
+def create(block, x=X_BUFFER+X+50, y=Y_BUFFER)
+  Sprite.new(x, y, block)
+end
+
+def clean(map)
+  20.downto(0) do |height|
+    if map.count {|block| (block.x < X_BUFFER + X * 11) && (block.y == Y_BUFFER + Y * height)} == 11
+      return true
+    end
+  end
+  false
+end
+
+Window.caption = 'OneBlockTetris'
+Window.width = 500
+Window.height = 600
+
+X = 20
+Y = 20
+
+X_BUFFER = 30
+Y_BUFFER = 100
+
+NEXT_PRINT_X = X_BUFFER + X * 14 + 10
+NEXT_PRINT_Y = Y_BUFFER + Y * 17 + 10
+NEXT_FONT = Font.new(19)
+
+RED = 0
+BLUE = 1
+GREEN = 2
+ORANGE = 3
+YELLOW = 4
+GRAY = 5
+
+clear = false
+current_block = nil
+next_block = rand(5)
+next_block_view = nil
+
+blocks = Image.loadTiles('../image/colorbox.png', 6, 1)
+
+map_tmp = [
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0],
+       [0,1,1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+      ]
+
+map = []
+
+for i in (0..(map_tmp.length-1))
+  for j in (0..(map_tmp[0].length-1))
+    map.push(Sprite.new(X_BUFFER + X * j, Y_BUFFER + Y * i, blocks[GRAY])) if map_tmp[i][j] == 0
+  end
+end
+
+Window.loop do
+  # ゲームを終了する用のキーを追加
+  # Q キーを押すと終了
+  # break 文は普通繰り返しを強制的に終了する為に使用する
+  # この場合では、ゲームを動かしているループを終了するため
+  # ゲームが終了する
+  if Input.keyPush?(K_Q)
+    break
+  end
+
+  # clear 変数が false の時はクリア状態を満たしていないため else の部分を実行する
+  # true になると if clear の内部を実行する
+  if clear
+    Window.drawFontEx(100, 300, 'CLEAR!!!', Font.new(70), { font: [255, 255, 255] })
+    if Input.keyPush?(K_RETURN)
+      break
+    end
+  else
+    unless current_block
+      current_block = create(blocks[next_block])
+      next_block = rand(5)
+      next_block_view = create(blocks[next_block], NEXT_PRINT_X+10, NEXT_PRINT_Y+30)
+    end
+
+    if Input.keyDown?(K_H)
+      current_block.x -= 2
+      if current_block === map
+        current_block.x += 2
+      end
+    end
+
+    if Input.keyDown?(K_L)
+      current_block.x += 2
+      if current_block === map
+        current_block.x -= 2
+      end
+    end
+
+    if Input.keyDown?(K_J)
+      current_block.y += 2
+      if current_block === map
+        current_block.y -= 2
+      end
+    end
+
+    if current_block === map
+      current_block.y -= 1
+      map.push(current_block)
+      clear = clean(map)
+      current_block = nil
+    else
+      current_block.y += 1
+    end
+
+    current_block.draw if current_block
+    Window.drawFontEx(NEXT_PRINT_X, NEXT_PRINT_Y, 'Next', NEXT_FONT, { font: [255, 255, 255] })
+    Sprite.draw(next_block_view)
+    Sprite.draw(map)
+  end
+end
+```
+今回のプログラムが正常に動作すれば演習は終了である。
+最後の追加項目は、`clean` メソッドの追加とゲームのシーンの設定である。
+`clean` メソッドは、ブロックが、一行揃っているかを調べ、揃っていれば true、
+揃っていなければ false を返す。
+
+そして、ゲームのシーンの決定に if 文 (条件分岐) を使い、
+clean メソッドの実行結果が true になった時に、Clear の文字を入れるようにしている。
+
+実際に動作が確認出来たなら、クリアの文字が表示できるか確かめてみよう。
