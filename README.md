@@ -828,17 +828,22 @@ end
 
 ``` ruby
 # START を選択するとゲーム開始
-  if arrow["y"] == START_POSITION["y"]
-    # シーン切り替えの為、ボタン入力後の待ち時間
-    sleep 1
-    scene = "TETRIS"
-    phase = "CREATE"
-  end
+if arrow["y"] == START_POSITION["y"]
+  # シーン切り替えの為、ボタン入力後の待ち時間
+  sleep 1
+  scene = "TETRIS"
+  phase = "CREATE"
+end
 ```
 
 さらに、下記のコードを
- if scene == "TETRIS"
-   map = Marshal.load(Marshal.dump(tetris_map))
+
+``` ruby
+if scene == "TETRIS"
+  map = Marshal.load(Marshal.dump(tetris_map))
+end
+```
+
 の下に書き込む。
 
 ``` ruby
